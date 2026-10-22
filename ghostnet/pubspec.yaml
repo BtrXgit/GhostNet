@@ -1,36 +1,31 @@
-name: ghostnet
-description: VPN app.
+name: ciphercloak
+description: "CipherCloak VPN — Secure, fast, and anonymous OpenVPN client."
 publish_to: 'none'
 
 version: 1.0.0+2
 
 environment:
-  sdk: ">=2.18.6 <3.0.0"
+  sdk: ^3.13.0
 
 dependencies:
   flutter:
     sdk: flutter
 
-  get: ^4.6.5
-  cupertino_icons: ^1.0.2
-  http: ^1.0.0
-  csv: ^5.0.2
+  get: ^4.7.3
+  cupertino_icons: ^2.0.0
+  http: ^1.6.0
+  csv: ^5.1.1
   hive: ^2.2.3
   hive_flutter: ^1.1.0
-  google_mobile_ads: ^4.0.0
-  firebase_core: ^2.14.0
-  firebase_remote_config: ^4.2.3
-  rename: ^3.0.1
-  google_fonts: ^6.1.0
-  animate_do: ^3.3.3
+  rename: ^3.1.0
+  google_fonts: ^9.0.0
+  animate_do: ^5.1.0
   iconsax: ^0.0.8
-  flutter_animate: ^4.5.0
-
+  flutter_animate: ^4.5.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
 
 flutter:
   uses-material-design: true

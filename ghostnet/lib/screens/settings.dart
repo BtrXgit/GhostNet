@@ -3,12 +3,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:ghostnet/helpers/ad_helper.dart';
-import 'package:ghostnet/helpers/config.dart';
-import 'package:ghostnet/helpers/prefs.dart';
-import 'package:ghostnet/main.dart';
-import 'package:ghostnet/screens/privacy_policy.dart';
-import 'package:ghostnet/widgets/change_theme.dart';
+import 'package:ciphercloak/helpers/prefs.dart';
+import 'package:ciphercloak/main.dart';
+import 'package:ciphercloak/screens/privacy_policy.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax/iconsax.dart';
 
@@ -18,25 +15,19 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget title = Text(
-      'GhostNet',
-      style: GoogleFonts.orbitron(
-        fontSize: 42,
-        color: Colors.white,
-      ),
+      'CipherCloak',
+      style: GoogleFonts.orbitron(fontSize: 42, color: Colors.white),
     );
-    title = title.animate(adapter: ValueAdapter(0.5)).shimmer(
-      colors: [
-        Colors.white,
-        Colors.black,
-        Colors.grey,
-      ],
-    );
+    title = title
+        .animate(adapter: ValueAdapter(0.5))
+        .shimmer(colors: [Colors.white, Colors.black, Colors.grey]);
 
     title = title
         .animate(onPlay: (controller) => controller.repeat(reverse: true))
         .saturate(
-            delay: NumDurationExtensions(1).seconds,
-            duration: NumDurationExtensions(2).seconds)
+          delay: NumDurationExtensions(1).seconds,
+          duration: NumDurationExtensions(2).seconds,
+        )
         .then()
         .tint(color: Theme.of(context).primaryColour)
         .then();
@@ -65,44 +56,43 @@ class SettingsPage extends StatelessWidget {
                 children: [
                   Container(
                     height: mediaQuery.height * 0.12,
-                    decoration: BoxDecoration(
-                      color: Colors.transparent,
-                    ),
+                    decoration: BoxDecoration(color: Colors.transparent),
                     width: mediaQuery.width,
                     child: ClipRRect(
                       child: BackdropFilter(
                         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                         child: Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: mediaQuery.width * .04),
-                            height: 70,
-                            decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.4),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.1),
-                                  spreadRadius: 5,
-                                  blurRadius: 7,
-                                  offset: Offset(0, 3),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: mediaQuery.width * .04,
+                          ),
+                          height: 70,
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.4),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 40, 10, 0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Settings',
+                                  style: GoogleFonts.orbitron(
+                                    color: Colors.white,
+                                    fontSize: 24,
+                                  ),
                                 ),
                               ],
                             ),
-                            child: Padding(
-                              padding: const EdgeInsets.fromLTRB(10, 40, 10, 0),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    'Settings',
-                                    style: GoogleFonts.orbitron(
-                                      color: Colors.white,
-                                      fontSize: 24,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )),
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -111,7 +101,9 @@ class SettingsPage extends StatelessWidget {
                   const SizedBox(height: 20),
                   Container(
                     margin: EdgeInsets.symmetric(
-                        vertical: mediaQuery.height * .006, horizontal: 20),
+                      vertical: mediaQuery.height * .006,
+                      horizontal: 20,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.transparent,
                       borderRadius: BorderRadius.circular(20),
@@ -123,7 +115,8 @@ class SettingsPage extends StatelessWidget {
                         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                         child: Container(
                           padding: EdgeInsets.symmetric(
-                              horizontal: mediaQuery.width * .04),
+                            horizontal: mediaQuery.width * .04,
+                          ),
                           decoration: BoxDecoration(
                             color: Colors.black.withOpacity(0.2),
                             borderRadius: BorderRadius.only(
@@ -164,31 +157,19 @@ class SettingsPage extends StatelessWidget {
                                           : Color(0xff131321),
                                       value: Pref.isDarkMode,
                                       onChanged: (bool value) {
-                                        //loads rewarded ad
-                                        if (Config.hideAds) {
-                                          Get.changeThemeMode(value
+                                        Get.changeThemeMode(
+                                          value
                                               ? ThemeMode.dark
-                                              : ThemeMode.light);
-                                          Pref.isDarkMode = value;
-                                          return;
-                                        }
-                                        Get.dialog(
-                                            WatchAdThemeDialog(onComplete: () {
-                                          //watch ad to gain reward(change theme)
-                                          AdHelper.showRewardedAd(
-                                              onComplete: () {
-                                            Get.changeThemeMode(value
-                                                ? ThemeMode.dark
-                                                : ThemeMode.light);
-                                            Pref.isDarkMode = value;
-                                          });
-                                        }));
+                                              : ThemeMode.light,
+                                        );
+                                        Pref.isDarkMode = value;
                                       },
                                     ),
                                     Icon(
                                       Icons.nightlight_round,
-                                      color:
-                                          Pref.isDarkMode ? Colors.white : null,
+                                      color: Pref.isDarkMode
+                                          ? Colors.white
+                                          : null,
                                     ),
                                   ],
                                 ),
@@ -204,10 +185,10 @@ class SettingsPage extends StatelessWidget {
                                   size: 28,
                                 ),
                                 title: const Text('About'),
-                                subtitle: Text('Find out more about GhostNet',
-                                    style: TextStyle(
-                                      color: Colors.grey,
-                                    )),
+                                subtitle: Text(
+                                  'Find out more about CipherCloak',
+                                  style: TextStyle(color: Colors.grey),
+                                ),
                                 iconColor: Theme.of(context).primaryColour,
                                 textColor: Theme.of(context).primaryColour,
                                 onTap: () {
@@ -215,14 +196,12 @@ class SettingsPage extends StatelessWidget {
                                 },
                               ),
                               ListTile(
-                                leading: const Icon(
-                                  Iconsax.activity,
-                                  size: 28,
-                                ),
+                                leading: const Icon(Iconsax.activity, size: 28),
                                 title: const Text('Changelog'),
                                 subtitle: const Text(
-                                    'Recent improvements and fixes',
-                                    style: TextStyle(color: Colors.grey)),
+                                  'Recent improvements and fixes',
+                                  style: TextStyle(color: Colors.grey),
+                                ),
                                 iconColor: Theme.of(context).primaryColour,
                                 textColor: Theme.of(context).primaryColour,
                                 onTap: () {
@@ -237,7 +216,9 @@ class SettingsPage extends StatelessWidget {
                   ),
                   Container(
                     margin: EdgeInsets.symmetric(
-                        vertical: mediaQuery.height * .006, horizontal: 20),
+                      vertical: mediaQuery.height * .006,
+                      horizontal: 20,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.transparent,
                       borderRadius: BorderRadius.circular(20),
@@ -249,7 +230,8 @@ class SettingsPage extends StatelessWidget {
                         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                         child: Container(
                           padding: EdgeInsets.symmetric(
-                              horizontal: mediaQuery.width * .04),
+                            horizontal: mediaQuery.width * .04,
+                          ),
                           decoration: BoxDecoration(
                             color: Colors.black.withOpacity(0.2),
                             borderRadius: BorderRadius.only(
@@ -269,33 +251,33 @@ class SettingsPage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               ListTile(
-                                leading: const Icon(
-                                  Iconsax.bookmark,
-                                  size: 28,
-                                ),
+                                leading: const Icon(Iconsax.bookmark, size: 28),
                                 title: const Text('Liscenses'),
                                 subtitle: const Text(
-                                    'View open source liscenses',
-                                    style: TextStyle(color: Colors.grey)),
+                                  'View open source liscenses',
+                                  style: TextStyle(color: Colors.grey),
+                                ),
                                 iconColor: Theme.of(context).primaryColour,
                                 textColor: Theme.of(context).primaryColour,
                                 onTap: () {
                                   showLicensePage(
-                                      context:
-                                          context); // Show the licenses page
+                                    context: context,
+                                  ); // Show the licenses page
                                 },
                               ),
                               ListTile(
-                                  leading: const Icon(Iconsax.document),
-                                  title: const Text('Privacy Policy'),
-                                  subtitle: const Text(
-                                      'GhostNet privacy policy',
-                                      style: TextStyle(color: Colors.grey)),
-                                  iconColor: Theme.of(context).primaryColour,
-                                  textColor: Theme.of(context).primaryColour,
-                                  onTap: () {
-                                    Get.to(const PrivacyPage());
-                                  }),
+                                leading: const Icon(Iconsax.document),
+                                title: const Text('Privacy Policy'),
+                                subtitle: const Text(
+                                  'CipherCloak privacy policy',
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                                iconColor: Theme.of(context).primaryColour,
+                                textColor: Theme.of(context).primaryColour,
+                                onTap: () {
+                                  Get.to(const PrivacyPage());
+                                },
+                              ),
                             ],
                           ),
                         ),
@@ -313,18 +295,22 @@ class SettingsPage extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  'GhostNet v 1.0.0',
+                  'CipherCloak v 1.0.0',
                   style: GoogleFonts.kanit(
-                      color: Theme.of(context).primaryColour, fontSize: 12),
+                    color: Theme.of(context).primaryColour,
+                    fontSize: 12,
+                  ),
                 ),
                 Text(
                   'By XD',
                   style: GoogleFonts.kanit(
-                      color: Theme.of(context).primaryColour, fontSize: 12),
+                    color: Theme.of(context).primaryColour,
+                    fontSize: 12,
+                  ),
                 ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
@@ -357,18 +343,12 @@ class SettingsPage extends StatelessWidget {
                 const SizedBox(height: 16),
                 Text(
                   '🔒 Protect your online privacy with GhostVPN - the premier VPN app. Explore a wide range of secure servers across the globe, ensuring anonymous and encrypted browsing. With an easy-to-use interface, GhostVPN offers seamless protection for your digital activities. Safeguard your data and access restricted content with confidence. 🌐🔒',
-                  style: TextStyle(
-                    color: Colors.grey[400],
-                    fontSize: 16,
-                  ),
+                  style: TextStyle(color: Colors.grey[400], fontSize: 16),
                 ),
                 const SizedBox(height: 16),
                 Text(
                   'Version: 1.0.0',
-                  style: TextStyle(
-                    color: Colors.grey[400],
-                    fontSize: 16,
-                  ),
+                  style: TextStyle(color: Colors.grey[400], fontSize: 16),
                 ),
               ],
             ),
@@ -384,9 +364,7 @@ void _showChangelogPopup(BuildContext context) {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         backgroundColor: const Color(0xFF1E1E2A),
         content: Container(
           padding: const EdgeInsets.all(20),
@@ -395,7 +373,7 @@ void _showChangelogPopup(BuildContext context) {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                '🚀 GhostNet Initial Release',
+                '🚀 CipherCloak Initial Release',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 24,
@@ -438,10 +416,7 @@ class ChangelogEntry extends StatelessWidget {
         const SizedBox(height: 8),
         Text(
           'Released on $date',
-          style: const TextStyle(
-            color: Colors.grey,
-            fontSize: 14,
-          ),
+          style: const TextStyle(color: Colors.grey, fontSize: 14),
         ),
         const SizedBox(height: 16),
         Column(
@@ -450,8 +425,10 @@ class ChangelogEntry extends StatelessWidget {
             return Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('•',
-                    style: TextStyle(color: Colors.white, fontSize: 18)),
+                const Text(
+                  '•',
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
                 const SizedBox(width: 8),
                 Flexible(
                   child: Text(

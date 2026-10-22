@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:ghostnet/screens/network_test.dart';
-import 'package:ghostnet/screens/settings.dart';
+import 'package:ciphercloak/screens/network_test.dart';
+import 'package:ciphercloak/screens/settings.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax/iconsax.dart';
 import '../controllers/home_controller.dart';
@@ -16,7 +16,6 @@ import '../main.dart';
 import '../models/vpn_status.dart';
 import '../services/vpn_engine.dart';
 import '../widgets/count_down_timer.dart';
-import '../widgets/home_card.dart';
 import 'location.dart';
 
 class GhostHome extends StatelessWidget {
@@ -161,7 +160,7 @@ class GhostHome extends StatelessWidget {
                     ),
                     ElasticIn(
                       child: Text(
-                        'GhostNet',
+                        'CipherCloak',
                         style: GoogleFonts.orbitron(
                           color: Theme.of(context).primaryColour,
                           fontSize: 42,

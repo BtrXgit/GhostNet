@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ghostnet/main.dart';
+import 'package:ciphercloak/main.dart';
 
 class PrivacyPage extends StatelessWidget {
   const PrivacyPage({super.key});
@@ -34,7 +34,7 @@ class PrivacyPage extends StatelessWidget {
             ),
             SizedBox(height: 16.0),
             Text(
-              'XD built the GhostNet VPN app as a Free app. This SERVICE is provided by XD at no cost and is intended for use as is.',
+              'XD built the CipherCloak VPN app as a Free app. This SERVICE is provided by XD at no cost and is intended for use as is.',
               style: TextStyle(fontSize: 16.0),
             ),
             SizedBox(height: 16.0),
@@ -49,7 +49,7 @@ class PrivacyPage extends StatelessWidget {
             ),
             SizedBox(height: 16.0),
             Text(
-              'The terms used in this Privacy Policy have the same meanings as in our Terms and Conditions, which are accessible at GhostNet unless otherwise defined in this Privacy Policy.',
+              'The terms used in this Privacy Policy have the same meanings as in our Terms and Conditions, which are accessible at CipherCloak unless otherwise defined in this Privacy Policy.',
               style: TextStyle(fontSize: 16.0),
             ),
             SizedBox(height: 16.0),
@@ -80,7 +80,7 @@ class PrivacyPage extends StatelessWidget {
             ),
             SizedBox(height: 8.0),
             Text(
-              'Google Play Services\nGoogle Analytics for Firebase\nFirebase Crashlytics\nLog Data',
+              'Google Play Services\nLog Data',
               style: TextStyle(fontSize: 16.0),
             ),
             SizedBox(height: 16.0),
