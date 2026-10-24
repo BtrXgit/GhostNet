@@ -4,12 +4,14 @@ import 'package:get/get.dart';
 import 'package:ciphercloak/screens/homescreen.dart';
 
 import 'helpers/prefs.dart';
+import 'services/vpn_engine.dart';
 
 late Size mediaQuery;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Pref.initializeHive();
+  await VpnEngine.initialize();
   mediaQuery = MediaQueryData.fromView(WidgetsBinding.instance.window).size;
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,

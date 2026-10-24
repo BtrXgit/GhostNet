@@ -642,12 +642,14 @@ public class VpnProfile implements Serializable, Cloneable {
         }
 
 
-        if (mUseCustomConfig) {
+        if (mUseCustomConfig && mCustomConfigOptions != null) {
             cfg.append("# Custom configuration options\n");
             cfg.append("# You are on your on own here :)\n");
-            cfg.append(mCustomConfigOptions);
+            String sanitizedCustom = mCustomConfigOptions
+                    .replaceAll("(?m)^\\s*data-ciphers(-fallback)?\\b.*$[\r\n]*", "")
+                    .replaceAll("(?m)^\\s*ncp-ciphers\\b.*$[\r\n]*", "");
+            cfg.append(sanitizedCustom);
             cfg.append("\n");
-
         }
 
         if (!canUsePlainRemotes) {
@@ -757,7 +759,11 @@ public class VpnProfile implements Serializable, Cloneable {
 
     public void writeConfigFile(Context context) throws IOException {
         FileWriter cfg = new FileWriter(VPNLaunchHelper.getConfigFilePath(context));
-        cfg.write(getConfigFile(context, false));
+        String configContent = getConfigFile(context, false);
+        configContent = configContent
+                .replaceAll("(?m)^\\s*data-ciphers(-fallback)?\\b.*$[\r\n]*", "")
+                .replaceAll("(?m)^\\s*ncp-ciphers\\b.*$[\r\n]*", "");
+        cfg.write(configContent);
         cfg.flush();
         cfg.close();
 

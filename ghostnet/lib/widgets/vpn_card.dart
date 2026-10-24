@@ -1,18 +1,16 @@
 import 'dart:math';
 import 'dart:ui';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/home_controller.dart';
 import '../helpers/prefs.dart';
 import '../main.dart';
 import '../models/vpn.dart';
-import '../services/vpn_engine.dart';
 
 class VpnCard extends StatefulWidget {
   final List<Vpn> vpnList;
 
-  const VpnCard({Key? key, required this.vpnList});
+  const VpnCard({Key? key, required this.vpnList}) : super(key: key);
 
   @override
   _VpnCardState createState() => _VpnCardState();
@@ -24,8 +22,8 @@ class _VpnCardState extends State<VpnCard> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<HomeController>();
-
-    widget.vpnList.sort((a, b) => a.countryLong.compareTo(b.countryLong));
+    // Sort servers in this country by highest speed first
+    widget.vpnList.sort((a, b) => b.speed.compareTo(a.speed));
 
     return Container(
       margin: EdgeInsets.symmetric(vertical: mediaQuery.height * .006),
@@ -66,21 +64,14 @@ class _VpnCardState extends State<VpnCard> {
                       : min(widget.vpnList.length, 4),
                   itemBuilder: (context, index) {
                     final vpn = widget.vpnList[index];
-                    return InkWell(
+                    final pingVal = int.tryParse(vpn.ping) ?? 45;
+
+                    return ListTile(
                       onTap: () {
-                        controller.vpn.value = vpn;
-                        Pref.vpn = vpn;
                         Get.back();
-                        if (controller.vpnState.value ==
-                            VpnEngine.vpnConnected) {
-                          VpnEngine.stopVpn();
-                          Future.delayed(Duration(seconds: 2),
-                              () => controller.connectToVpn());
-                        } else {
-                          controller.connectToVpn();
-                        }
+                        controller.switchServer(vpn);
                       },
-                      child: ListTile(
+                      contentPadding: EdgeInsets.symmetric(horizontal: 4, vertical: 0),
                         leading: Container(
                           padding: EdgeInsets.all(.5),
                           decoration: BoxDecoration(
@@ -88,38 +79,88 @@ class _VpnCardState extends State<VpnCard> {
                               borderRadius: BorderRadius.circular(5)),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(5),
-                            child: Image.asset(
-                                'assets/flags/${vpn.countryShort.toLowerCase()}.png',
-                                height: 40,
-                                width: mediaQuery.width * .15,
-                                fit: BoxFit.cover),
+                            child: vpn.countryShort.toLowerCase() == 'auto'
+                                ? Container(
+                                    height: 32,
+                                    width: 48,
+                                    color: Colors.blueAccent.withOpacity(0.15),
+                                    child: Icon(Icons.bolt_rounded,
+                                        color: Colors.blueAccent, size: 20),
+                                  )
+                                : Image.asset(
+                                    'assets/flags/${vpn.countryShort.toLowerCase()}.png',
+                                    height: 32,
+                                    width: 48,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) =>
+                                        Container(
+                                      height: 32,
+                                      width: 48,
+                                      color: Colors.blueGrey.withOpacity(0.2),
+                                      child: Icon(Icons.public,
+                                          color: Colors.blueAccent, size: 20),
+                                    ),
+                                  ),
                           ),
                         ),
-                        title: Text(vpn.countryLong),
+                        title: Text(
+                          vpn.remark.isNotEmpty ? vpn.remark : vpn.countryLong,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13.5),
+                        ),
                         subtitle: Row(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.speed_rounded,
-                                color: Colors.blue, size: 20),
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                              decoration: BoxDecoration(
+                                color: Colors.blueAccent.withOpacity(0.15),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Text(
+                                vpn.protocol,
+                                style: TextStyle(
+                                  fontSize: 9.5,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.blueAccent,
+                                ),
+                              ),
+                            ),
                             SizedBox(width: 4),
-                            Text(_formatBytes(vpn.speed, 1),
-                                style: TextStyle(fontSize: 13))
+                            Icon(Icons.speed_rounded, color: Colors.blue, size: 14),
+                            SizedBox(width: 2),
+                            Flexible(
+                              child: Text(
+                                _formatBytes(vpn.speed, 1),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(fontSize: 11),
+                              ),
+                            ),
                           ],
                         ),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text(vpn.numVpnSessions.toString(),
-                                style: TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w500,
-                                    color: Theme.of(context).lightText)),
-                            SizedBox(width: 4),
-                            Icon(CupertinoIcons.person_3, color: Colors.blue),
+                            Icon(
+                              Icons.bolt_rounded,
+                              size: 15,
+                              color: pingVal < 80 ? Colors.green : Colors.amber,
+                            ),
+                            SizedBox(width: 2),
+                            Text(
+                              '${vpn.ping} ms',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: pingVal < 80 ? Colors.green : Colors.amber,
+                              ),
+                            ),
                           ],
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
                 ),
                 if (widget.vpnList.length > 4)
                   Row(
@@ -135,9 +176,7 @@ class _VpnCardState extends State<VpnCard> {
                           child: Text(
                             'See More',
                             style: TextStyle(
-                                color: Pref.isDarkMode
-                                    ? Colors.white
-                                    : Colors.black),
+                                color: Pref.isDarkMode ? Colors.white : Colors.black),
                           ),
                         )
                       else

@@ -86,6 +86,10 @@ public class ConfigParser {
             "topology",
             "user",
             "win-sys",
+            "data-ciphers",
+            "data-ciphers-fallback",
+            "ncp-ciphers",
+            "ncp-disable",
     };
     private final String[][] ignoreOptionsWithArg =
             {
@@ -534,6 +538,13 @@ public class ConfigParser {
         Vector<String> cipher = getOption("cipher", 1, 1);
         if (cipher != null)
             np.mCipher = cipher.get(1);
+
+        Vector<String> dataCiphers = getOption("data-ciphers", 1, 10);
+        if (dataCiphers != null && (np.mCipher == null || np.mCipher.isEmpty())) {
+            String c = dataCiphers.get(1).split("[: ]")[0].replace("?", "").trim();
+            if (!c.isEmpty())
+                np.mCipher = c;
+        }
 
         Vector<String> auth = getOption("auth", 1, 1);
         if (auth != null)

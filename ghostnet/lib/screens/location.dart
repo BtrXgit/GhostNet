@@ -10,13 +10,12 @@ import '../models/vpn.dart';
 import '../widgets/vpn_card.dart';
 
 class LocationScreen extends StatelessWidget {
-  LocationScreen({Key? key});
+  LocationScreen({Key? key}) : super(key: key);
 
-  final _controller = LocationController();
+  final _controller = Get.put(LocationController());
 
   @override
   Widget build(BuildContext context) {
-    if (_controller.vpnList.isEmpty) _controller.getVpnData();
 
     return Obx(
       () => Scaffold(
@@ -92,9 +91,8 @@ class LocationScreen extends StatelessWidget {
   }
 
   Widget _vpnData() {
-    _controller.vpnList.sort((a, b) => a.countryLong.compareTo(b.countryLong));
-
-    final groupedVpnList = _groupVpnsByCountry(_controller.vpnList);
+    final sortedList = [..._controller.vpnList]..sort((a, b) => a.countryLong.compareTo(b.countryLong));
+    final groupedVpnList = _groupVpnsByCountry(sortedList);
 
     return RefreshIndicator(
       onRefresh: () => _controller.getVpnData(),
@@ -115,16 +113,54 @@ class LocationScreen extends StatelessWidget {
   }
 
   List<List<Vpn>> _groupVpnsByCountry(List<Vpn> vpnList) {
-    Map<String, List<Vpn>> groupedVpns = {};
+    final Map<String, List<Vpn>> groupedVpns = {};
 
     for (var vpn in vpnList) {
-      if (!groupedVpns.containsKey(vpn.countryLong)) {
-        groupedVpns[vpn.countryLong] = [];
-      }
-      groupedVpns[vpn.countryLong]!.add(vpn);
+      groupedVpns.putIfAbsent(vpn.countryLong, () => []).add(vpn);
     }
 
-    return groupedVpns.values.toList();
+    final priorityOrder = [
+      '⚡ Smart Connect',
+      'India',
+      'Singapore',
+      'United States',
+      'Germany',
+      'United Kingdom',
+      'Japan',
+      'South Korea',
+      'Canada',
+      'France',
+      'Netherlands',
+      'United Arab Emirates',
+      'Australia',
+      'Hong Kong',
+      'Turkey',
+      'Switzerland',
+      'Italy',
+      'Spain',
+      'Poland',
+      'Finland',
+      'Austria',
+      'Romania',
+      'Indonesia',
+      'Thailand',
+      'Taiwan',
+      'Vietnam',
+      'South Africa',
+      'Armenia',
+      'Estonia',
+      'Latvia',
+    ];
+
+    final List<List<Vpn>> result = [];
+    for (var country in priorityOrder) {
+      if (groupedVpns.containsKey(country)) {
+        result.add(groupedVpns.remove(country)!);
+      }
+    }
+    // Append any remaining countries
+    result.addAll(groupedVpns.values);
+    return result;
   }
 
   Widget _loadingWidget() => SizedBox(

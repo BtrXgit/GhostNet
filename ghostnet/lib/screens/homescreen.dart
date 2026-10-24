@@ -25,10 +25,6 @@ class GhostHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ///Add listener to update vpn state
-    VpnEngine.vpnStageSnapshot().listen((event) {
-      _controller.vpnState.value = event;
-    });
 
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColour,
@@ -339,7 +335,7 @@ class GhostHome extends StatelessWidget {
                                       ),
                                     ),
                                     Text(
-                                      'Download',
+                                      'Upload',
                                       style: GoogleFonts.kanit(
                                         color: Colors.grey,
                                         fontSize: 16,
@@ -461,12 +457,13 @@ class GhostHome extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 20,
-                backgroundColor: Colors.blue,
-                child: _controller.vpn.value.countryLong.isEmpty
-                    ? Icon(Icons.vpn_lock_rounded,
-                        size: 30, color: Colors.white)
+                backgroundColor: Colors.blueAccent,
+                child: (_controller.vpn.value.countryLong.isEmpty ||
+                        _controller.vpn.value.countryShort.toLowerCase() == 'auto')
+                    ? Icon(Icons.bolt_rounded, size: 24, color: Colors.white)
                     : null,
-                backgroundImage: _controller.vpn.value.countryLong.isEmpty
+                backgroundImage: (_controller.vpn.value.countryLong.isEmpty ||
+                        _controller.vpn.value.countryShort.toLowerCase() == 'auto')
                     ? null
                     : AssetImage(
                         'assets/flags/${_controller.vpn.value.countryShort.toLowerCase()}.png'),
@@ -476,22 +473,22 @@ class GhostHome extends StatelessWidget {
               SizedBox(width: 10),
 
               //text
-              Text(
-                _controller.vpn.value.countryLong.isEmpty
-                    ? 'Country'
-                    : _controller.vpn.value.countryLong.length > 15
-                        ? _controller.vpn.value.countryLong.substring(0,
-                            _controller.vpn.value.countryLong.lastIndexOf(' '))
-                        : _controller.vpn.value.countryLong,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
+              Expanded(
+                child: Text(
+                  _controller.vpn.value.countryLong.isEmpty
+                      ? 'Select Location'
+                      : _controller.vpn.value.countryLong,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 17,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
 
-              //for covering available spacing
-              Spacer(),
+              SizedBox(width: 8),
               Icon(Icons.equalizer_rounded, size: 26, color: Colors.white),
               Text(
                 _controller.vpn.value.countryLong.isEmpty

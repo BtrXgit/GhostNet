@@ -22,6 +22,7 @@ dependencies:
   animate_do: ^5.1.0
   iconsax: ^0.0.8
   flutter_animate: ^4.5.2
+  flutter_v2ray: ^1.0.10
 
 dev_dependencies:
   flutter_test:

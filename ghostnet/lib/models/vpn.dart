@@ -1,33 +1,42 @@
 class Vpn {
-  late final String hostname;
-  late final String ip;
-  late final String ping;
-  late final int speed;
-  late final String countryLong;
-  late final String countryShort;
-  late final int numVpnSessions;
-  late final String openVPNConfigDataBase64;
+  late String hostname;
+  late String ip;
+  late String ping;
+  late int speed;
+  late String countryLong;
+  late String countryShort;
+  late int numVpnSessions;
+  late String rawUrl;
+  late String v2rayConfig;
+  late String protocol;
+  late String remark;
 
-  Vpn(
-      {required this.hostname,
-      required this.ip,
-      required this.ping,
-      required this.speed,
-      required this.countryLong,
-      required this.countryShort,
-      required this.numVpnSessions,
-      required this.openVPNConfigDataBase64});
+  Vpn({
+    this.hostname = '',
+    this.ip = '',
+    this.ping = '0',
+    this.speed = 0,
+    required this.countryLong,
+    required this.countryShort,
+    this.numVpnSessions = 0,
+    this.rawUrl = '',
+    this.v2rayConfig = '',
+    this.protocol = 'VLESS',
+    this.remark = '',
+  });
 
   Vpn.fromJson(Map<String, dynamic> json) {
-    hostname = json['HostName'] ?? '';
-    ip = json['IP'] ?? '';
-    ping = json['Ping'].toString();
-    speed = json['Speed'] ?? 0;
-    countryLong = json['CountryLong'] ?? '';
-    countryShort = json['CountryShort'] ?? '';
-    numVpnSessions = json['NumVpnSessions'] ?? 0;
-
-    openVPNConfigDataBase64 = json['OpenVPN_ConfigData_Base64'] ?? '';
+    hostname = json['HostName'] ?? json['hostname'] ?? '';
+    ip = json['IP'] ?? json['ip'] ?? '';
+    ping = (json['Ping'] ?? json['ping'] ?? '0').toString();
+    speed = json['Speed'] ?? json['speed'] ?? 0;
+    countryLong = json['CountryLong'] ?? json['countryLong'] ?? '';
+    countryShort = json['CountryShort'] ?? json['countryShort'] ?? '';
+    numVpnSessions = json['NumVpnSessions'] ?? json['numVpnSessions'] ?? 0;
+    rawUrl = json['rawUrl'] ?? json['OpenVPN_ConfigData_Base64'] ?? '';
+    v2rayConfig = json['v2rayConfig'] ?? '';
+    protocol = json['protocol'] ?? 'VLESS';
+    remark = json['remark'] ?? (countryLong.isNotEmpty ? countryLong : 'Fast Server');
   }
 
   Map<String, dynamic> toJson() {
@@ -39,7 +48,10 @@ class Vpn {
     data['CountryLong'] = countryLong;
     data['CountryShort'] = countryShort;
     data['NumVpnSessions'] = numVpnSessions;
-    data['OpenVPN_ConfigData_Base64'] = openVPNConfigDataBase64;
+    data['rawUrl'] = rawUrl;
+    data['v2rayConfig'] = v2rayConfig;
+    data['protocol'] = protocol;
+    data['remark'] = remark;
     return data;
   }
 }

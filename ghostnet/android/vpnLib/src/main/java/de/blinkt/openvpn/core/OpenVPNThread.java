@@ -10,6 +10,7 @@ import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -56,7 +57,9 @@ public class OpenVPNThread implements Runnable {
     }
 
     public void stopProcess() {
-        mProcess.destroy();
+        if (mProcess != null) {
+            mProcess.destroy();
+        }
     }
 
     void setReplaceConnection()
@@ -72,7 +75,7 @@ public class OpenVPNThread implements Runnable {
             Log.i(TAG, "OpenVPN process exited");
         } catch (Exception e) {
             VpnStatus.logException("Starting OpenVPN Thread", e);
-            Log.e(TAG, "OpenVPNThread Got " + e.toString());
+            Log.e(TAG, "OpenVPNThread Got " + e.toString(), e);
         } finally {
             int exitvalue = 0;
             try {
@@ -126,7 +129,9 @@ public class OpenVPNThread implements Runnable {
 
     public static boolean stop(){
         mService.openvpnStopped();
-        mProcess.destroy();
+        if (mProcess != null) {
+            mProcess.destroy();
+        }
         return true;
     }
 
@@ -153,8 +158,11 @@ public class OpenVPNThread implements Runnable {
 
             while (true) {
                 String logline = br.readLine();
-                if (logline == null)
+                if (logline == null) {
+                    Log.i(TAG, "OpenVPN output stream closed");
                     return;
+                }
+                Log.d(TAG, "OpenVPN log: " + logline);
 
                 if (logline.startsWith(DUMP_PATH_STRING))
                     mDumpPath = logline.substring(DUMP_PATH_STRING.length());
@@ -200,6 +208,7 @@ public class OpenVPNThread implements Runnable {
             }
         } catch (InterruptedException | IOException e) {
             VpnStatus.logException("Error reading from output of OpenVPN process", e);
+            Log.e(TAG, "Error starting/reading from output of OpenVPN process", e);
             stopProcess();
         }
 
@@ -207,18 +216,31 @@ public class OpenVPNThread implements Runnable {
     }
 
     private String genLibraryPath(String[] argv, ProcessBuilder pb) {
-        // Hack until I find a good way to get the real library path
-        String applibpath = argv[0].replaceFirst("/cache/.*$", "/lib");
-
-        String lbpath = pb.environment().get("LD_LIBRARY_PATH");
-        if (lbpath == null)
-            lbpath = applibpath;
-        else
-            lbpath = applibpath + ":" + lbpath;
-
-        if (!applibpath.equals(mNativeDir)) {
-            lbpath = mNativeDir + ":" + lbpath;
+        String binDir = null;
+        if (argv != null && argv.length > 0 && argv[0] != null) {
+            File binFile = new File(argv[0]);
+            if (binFile.isDirectory()) {
+                binDir = binFile.getAbsolutePath();
+            } else if (binFile.getParent() != null) {
+                binDir = binFile.getParent();
+            }
         }
+
+        if (binDir == null) {
+            binDir = mNativeDir;
+        }
+
+        String lbpath = binDir;
+        if (mNativeDir != null && !mNativeDir.equals(binDir)) {
+            lbpath = binDir + ":" + mNativeDir;
+        }
+
+        String existing = pb.environment().get("LD_LIBRARY_PATH");
+        if (existing != null && !existing.isEmpty()) {
+            lbpath = lbpath + ":" + existing;
+        }
+
+        Log.d(TAG, "Using LD_LIBRARY_PATH: " + lbpath);
         return lbpath;
     }
 }

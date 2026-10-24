@@ -25,4 +25,4 @@ plugins {
 }
 
 include(":app")
-include(":vpnLib")
+// include(":vpnLib")
