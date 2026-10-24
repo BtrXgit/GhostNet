@@ -3,32 +3,17 @@
 ![Dart](https://img.shields.io/badge/dart-100%25-brightgreen)
 ![Flutter](https://img.shields.io/badge/Flutter-Cross%20Platform-blue)
 
-<b>Simple, Decent & Free VPN Application based on OpenVPN Protocol.</b></br>
+<b>GhostNet — High-Speed, Secure & Modern VPN Application powered by V2Ray (VLESS, Trojan, Shadowsocks).</b></br>
 
-<b>Check Youtube Course 👇<b>
-https://youtube.com/playlist?list=PL8kbUJtS6hyal7Uw7wTeYmv7yiNPH5kOq
-
-<b>Some ScreenShots(Actual App Even Looks Better 😃):</b></br><br>
-<kbd>
-<img src="https://github.com/HarshAndroid/FreeVPN-App-Flutter/blob/master/screenshots/1.png" width=30% height=30%/>
-<img src="https://github.com/HarshAndroid/FreeVPN-App-Flutter/blob/master/screenshots/2.png" width=30% height=30%/>
-<img src="https://github.com/HarshAndroid/FreeVPN-App-Flutter/blob/master/screenshots/3.png" width=30% height=30%/>
-<img src="https://github.com/HarshAndroid/FreeVPN-App-Flutter/blob/master/screenshots/4.png" width=30% height=30%/>
-<img src="https://github.com/HarshAndroid/FreeVPN-App-Flutter/blob/master/screenshots/5.png" width=30% height=30%/>
-<img src="https://github.com/HarshAndroid/FreeVPN-App-Flutter/blob/master/screenshots/6.png" width=30% height=30%/>
-</kbd>
-<br>
-<br>
-  
- <b>Features👇 : </b>
+<b>Features👇 : </b>
 <ul>
-<li>Many Free Public Servers (From: https://www.vpngate.net/en/)
-<li>Secure OpenVPN Protocol
-<li>No Signing Required
-<li>IP Address Test
-<li>Data Caching
-<li>Google Test Ads Integrated
-<li>Decent UI with New Material Widgets
+<li>Worldwide Fast Verified Servers (29+ Countries across Asia, Europe, Americas, Middle East)
+<li>Ultra-fast V2Ray protocols: VLESS (Reality), Trojan, and Shadowsocks
+<li>Smart Connect Auto-Failover: Zero dead nodes, lowest latency
+<li>Anti-Censorship DNS with Cloudflare DoH & Full TLS SNI Sniffing
+<li>No Registration Required
+<li>Realtime IP & Speed Test
+<li>Modern Glassmorphism UI
 <li>And Much More....
 </ul>
 

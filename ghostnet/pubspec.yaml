@@ -1,5 +1,5 @@
 name: ciphercloak
-description: "CipherCloak VPN — Secure, fast, and anonymous OpenVPN client."
+description: "CipherCloak VPN — Secure, fast, and anonymous VPN client."
 publish_to: 'none'
 
 version: 1.0.0+2
@@ -14,7 +14,6 @@ dependencies:
   get: ^4.7.3
   cupertino_icons: ^2.0.0
   http: ^1.6.0
-  csv: ^5.1.1
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   rename: ^3.1.0
@@ -33,6 +32,5 @@ flutter:
 
   assets:
     - assets/
-    - assets/vpn/
     - assets/images/
     - assets/flags/

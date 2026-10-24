@@ -33,7 +33,7 @@ class Vpn {
     countryLong = json['CountryLong'] ?? json['countryLong'] ?? '';
     countryShort = json['CountryShort'] ?? json['countryShort'] ?? '';
     numVpnSessions = json['NumVpnSessions'] ?? json['numVpnSessions'] ?? 0;
-    rawUrl = json['rawUrl'] ?? json['OpenVPN_ConfigData_Base64'] ?? '';
+    rawUrl = json['rawUrl'] ?? '';
     v2rayConfig = json['v2rayConfig'] ?? '';
     protocol = json['protocol'] ?? 'VLESS';
     remark = json['remark'] ?? (countryLong.isNotEmpty ? countryLong : 'Fast Server');

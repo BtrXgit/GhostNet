@@ -5,7 +5,8 @@ void main() {
   test('test ip fetch', () async {
     print('Testing ip-api.com...');
     try {
-      final res = await get(Uri.parse('http://ip-api.com/json/')).timeout(const Duration(seconds: 5));
+      final res = await get(Uri.parse('http://ip-api.com/json/'))
+          .timeout(const Duration(seconds: 5));
       print('ip-api status: ${res.statusCode}');
       print('ip-api body: ${res.body}');
     } catch (e) {
@@ -14,7 +15,8 @@ void main() {
 
     print('Testing ipwho.is...');
     try {
-      final res = await get(Uri.parse('https://ipwho.is/')).timeout(const Duration(seconds: 5));
+      final res = await get(Uri.parse('https://ipwho.is/'))
+          .timeout(const Duration(seconds: 5));
       print('ipwho.is status: ${res.statusCode}');
       print('ipwho.is body: ${res.body}');
     } catch (e) {
